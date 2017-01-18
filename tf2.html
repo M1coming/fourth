@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+<style>
+
+	li{
+		width:100px;
+		height: 20px;
+		background: yellow;
+		margin:10px;
+		list-style-type:none;
+
+	}
+	div{
+		width: 100px;
+		height: 100px;
+		background:red;
+		margin:200px;
+	}
+</style>
+
+<script>
+/*
+	拖放事件:
+		1.draggable:
+		  设置为true,元素就可以拖拽了
+
+		2.拖拽元素事件:事件对象为被拖拽元素
+		  dragstart:拖拽前触发
+		  drag:拖拽前 到 拖拽结束之间,连续触发  (和mousemove有区别)
+		  dragend:拖拽结束触发
+
+		3.目标元素事件:事件对象为目标元素
+		  dragenter:进入目标元素触发,相当于mouseover;
+		  dragover:进入目标,离开目标之间,连续触发;
+		  dragleave:离开目标元素触发,相当于mouseout
+		  drop:在目标元素上释放鼠标时候触发
+ */
+
+</script>
+
+</head>
+<body>
+
+	<ul id="ul">
+		<li draggable='true'>a</li>
+		<li draggable='true'>b</li>
+		<li draggable='true'>c</li>
+		<li draggable='true'>1</li>
+		<li draggable='true'>2</li>
+		<li draggable='true'>3</li>
+		<li draggable='true'>4</li>
+	</ul>
+<div id="div1"></div>	
+
+<script>
+var oUl=document.getElementById('ul')
+var oLi=document.getElementsByTagName('li')
+var oDiv=document.getElementById('div1')
+var i=0;
+for(var i=0;i<oLi.length;i++){
+	oLi[i].index=i; //设置索引
+	oLi[i].ondragstart=function(ev){
+		var ev=ev||window.event; //找到事件对象
+		//dataTransfer 对象
+		// setData():设置数据key和value(必须是字母)
+		// getData():获取数据,根据key值,获取对应的value
+		// console.log(ev)
+		ev.dataTransfer.setData('name',this.index)   //设置对应的key和value
+		console.log(oLi[ev.dataTransfer.getData('name',this.index)]); //打印刚才设置的value和key
+		//找到对应的li
+
+		this.style.background='green'
+	}
+
+	
+
+	// oLi[i].ondrag=function(){
+	// 	document.title=i++
+	// }
+	oLi[i].ondragend=function(){
+		this.style.background='blue'
+	}
+	
+}
+
+//目标元素事件
+oDiv.ondragenter=function(){
+	this.style.background='#ccc'
+}
+oDiv.ondragover=function(ev){
+	//enter和leave之间触发
+	//要想触发drop事件,就必须在dragover当中阻止默认事件
+	 document.title=i++;
+	 ev.preventDefault()
+ }
+
+oDiv.ondragleave=function(){
+
+	this.style.background='red'
+
+}
+
+oDiv.ondrop=function(ev){
+	oUl.removeChild(oLi[ev.dataTransfer.getData('name',this.index)]) //获取到对应的key和value
+	
+	//刷新索引
+	for(var i=0;i<oLi.length;i++){
+		oLi[i].index=i;
+	}
+
+ }
+
+
+</script>
+
+</body>
+</html>
